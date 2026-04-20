@@ -60,10 +60,11 @@ class DeliveryPartner(models.Model):
     username = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
     current_status = models.CharField(max_length=50, default="Available")
+    is_available = models.BooleanField(default=True)
+    assigned_orders = models.IntegerField(default=0)
 
     def __str__(self):
         return self.username
-    
 
 class Warehouse(models.Model):
     name = models.CharField(max_length=100)

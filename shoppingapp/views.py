@@ -33,34 +33,52 @@ def product_list(request):
 def buy_product(request, product_id):
     product = get_object_or_404(Product, product_id=product_id)
 
-    if product.stock > 0:
-        product.stock -= 1
+    customer_name = request.session.get('customer_name', 'Guest')
+    location = request.session.get('location', 'Unknown')
+
+    quantity = 1
+
+    warehouse = Warehouse.objects.filter(
+        is_active=True,
+        current_load__lt=models.F('max_capacity')
+    ).order_by('current_load').first()
+
+    if warehouse is None:
+        return HttpResponse("No warehouse available / delayed")
+
+    partner = assign_delivery_partner()
+
+    if partner is None:
+        return HttpResponse("No delivery partner available")
+
+    if product.stock >= quantity:
+        product.stock -= quantity
         product.save()
 
+        warehouse.current_load += 1
+        warehouse.save()
+
+        reward_points = int(product.price // 10)
+
         Order.objects.create(
-            customer_name=request.session.get('customer_name', 'Guest'),
-            customer_location=request.session.get('location', 'Unknown'),
+            customer_name=customer_name,
+            customer_location=location,
             product=product,
-            quantity=1,
+            quantity=quantity,
             delivery_type="Fast",
-            order_status="Placed"
+            order_status="Picking",
+            reward_points=reward_points,
+            warehouse=warehouse
         )
 
         return HttpResponse(f"""
-            <h2>Order placed successfully ✅</h2>
-            <p>Customer: {request.session.get('customer_name', 'Guest')}</p>
-            <p>Delivery Address: {request.session.get('location', 'Unknown')}</p>
-            <p>Product: {product.name}</p>
-            <p>Remaining stock: {product.stock}</p>
-            <a href="/">Go back to Shop</a>
+            Order placed successfully <br>
+            Warehouse: {warehouse.name} <br>
+            Delivery Partner: {partner.username} <br>
+            Reward Points: {reward_points}
         """)
 
-    else:
-        return HttpResponse("""
-            <h2>Out of Stock ❌</h2>
-            <a href="/">Go back to Shop</a>
-        """)
-        
+    return HttpResponse("Out of Stock")      
 
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, product_id=product_id)
@@ -126,3 +144,57 @@ def seller_add_product(request):
     )
 
     return HttpResponse(f"Product added by seller {seller_name}")
+
+
+def assign_delivery_partner():
+    partner = DeliveryPartner.objects.filter(
+        is_available=True
+    ).order_by('assigned_orders').first()
+
+    if partner:
+        partner.assigned_orders += 1
+        partner.save()
+        return partner
+
+    return None
+
+
+def update_delivery_status(request, order_id):
+    order = Order.objects.get(id=order_id)
+
+    if order.order_status == "Picking":
+        order.order_status = "Packed"
+
+    elif order.order_status == "Packed":
+        order.order_status = "Dispatched"
+
+    elif order.order_status == "Dispatched":
+        order.order_status = "Delivered"
+
+    order.save()
+
+    return HttpResponse(
+        f"Updated Status: {order.order_status}"
+    )
+    
+    
+def return_order(request, order_id):
+    order = Order.objects.get(id=order_id)
+
+    if order.order_status == "Delivered":
+        order.order_status = "Return Requested"
+
+        product = order.product
+        product.stock += order.quantity
+        product.save()
+
+        order.reward_points = 0
+        order.save()
+
+        return HttpResponse(
+            "Return approved. Refund initiated."
+        )
+
+    return HttpResponse(
+        "Return not allowed before delivery"
+    )
