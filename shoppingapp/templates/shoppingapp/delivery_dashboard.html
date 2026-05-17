@@ -1,0 +1,52 @@
+{% extends 'shoppingapp/base.html' %}
+
+{% block content %}
+
+<h1>Delivery Dashboard</h1>
+
+<h2>
+    Welcome {{ partner.username }}
+</h2>
+
+{% if orders %}
+
+{% for order in orders %}
+
+<div
+style="
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    margin-bottom:20px;
+"
+>
+
+    <h2>{{ order.product.name }}</h2>
+
+    <p>Customer: {{ order.customer_name }}</p>
+
+    <p>Location: {{ order.customer_location }}</p>
+
+    <p>Status: {{ order.order_status }}</p>
+
+    <p>Delivery Type: {{ order.delivery_type }}</p>
+
+    <a href="/update-status/{{ order.id }}/">
+
+        <button>
+            Update Status
+        </button>
+
+    </a>
+
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<h2>No assigned deliveries</h2>
+
+{% endif %}
+
+{% endblock %}

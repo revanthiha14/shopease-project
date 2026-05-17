@@ -1,0 +1,51 @@
+{% extends 'shoppingapp/base.html' %}
+
+{% block content %}
+
+<h1>Add Product</h1>
+
+<div class="product-card">
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <input type="text"
+               name="name"
+               placeholder="Product Name">
+
+        <br>
+
+        <input type="text"
+               name="category"
+               placeholder="Category">
+
+        <br>
+
+        <input type="number"
+               name="price"
+               placeholder="Price">
+
+        <br>
+
+        <input type="number"
+               name="stock"
+               placeholder="Stock">
+
+        <br>
+
+        <input type="text"
+               name="image_url"
+               placeholder="Image URL">
+
+        <br>
+
+        <button type="submit">
+            Add Product
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

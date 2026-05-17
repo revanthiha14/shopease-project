@@ -1,0 +1,39 @@
+{% extends 'shoppingapp/base.html' %}
+
+{% block content %}
+
+<div class="container">
+
+    <h1>Seller Dashboard</h1>
+
+    <div class="product-card">
+
+        <h2>Welcome {{ seller.username }}</h2>
+
+        <a href="/seller-add-product/">
+            <button>Add Product</button>
+        </a>
+
+    </div>
+
+    <h2>Your Products</h2>
+
+    {% for product in products %}
+
+    <div class="product-card">
+
+        <h3>{{ product.name }}</h3>
+
+        <p>Category: {{ product.category }}</p>
+
+        <p>Price: ₹{{ product.price }}</p>
+
+        <p>Stock: {{ product.stock }}</p>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,149 @@
+{% extends 'shoppingapp/base.html' %}
+
+{% block content %}
+
+<h1>Your Cart</h1>
+
+{% if cart_items %}
+
+<div
+style="
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+"
+>
+
+{% for item in cart_items %}
+
+<div
+style="
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+"
+>
+
+<div>
+
+    <h2>{{ item.product.name }}</h2>
+
+    <p>Price: ₹{{ item.product.price }}</p>
+
+    <div
+    style="
+        display:flex;
+        align-items:center;
+        gap:10px;
+    "
+    >
+
+        <a href="/decrease-cart/{{ item.id }}/">
+
+            <button
+            style="
+                background:red;
+                width:35px;
+            "
+            >
+                -
+            </button>
+
+        </a>
+
+        <p style="margin:0;">
+            Quantity: {{ item.quantity }}
+        </p>
+
+        <a href="/increase-cart/{{ item.id }}/">
+
+            <button
+            style="
+                background:green;
+                width:35px;
+            "
+            >
+                +
+            </button>
+
+        </a>
+
+    </div>
+
+    <p>
+
+        Subtotal:
+        ₹{{ item.subtotal }}
+
+    </p>
+
+</div>
+
+<div>
+
+    <a href="/remove-cart/{{ item.id }}/">
+
+        <button
+        style="
+            background:red;
+            color:white;
+            border:none;
+            padding:10px 15px;
+            border-radius:5px;
+        "
+        >
+            Remove
+        </button>
+
+    </a>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+<div
+style="
+    background:#111827;
+    color:white;
+    padding:25px;
+    border-radius:10px;
+"
+>
+
+    <h2>Total: ₹{{ total }}</h2>
+
+    <a href="/payment/">
+
+        <button
+        style="
+            background:#22c55e;
+            color:white;
+            border:none;
+            padding:12px 20px;
+            border-radius:5px;
+            font-size:16px;
+        "
+        >
+
+            Proceed to Checkout
+
+        </button>
+
+    </a>
+
+</div>
+
+</div>
+
+{% else %}
+
+<h2>Cart is empty</h2>
+
+{% endif %}
+
+{% endblock %}

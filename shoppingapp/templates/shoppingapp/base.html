@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>ShopEase</title>
+
+    <style>
+
+        body{
+            margin:0;
+            font-family:Arial, sans-serif;
+            background:#f4f4f4;
+        }
+
+        .navbar{
+            background:#07142b;
+            padding:20px;
+        }
+
+        .navbar a{
+            color:white;
+            text-decoration:none;
+            margin-right:25px;
+            font-size:20px;
+            font-weight:bold;
+        }
+
+        .navbar a:hover{
+            color:#60a5fa;
+        }
+
+        .container{
+            padding:30px;
+        }
+
+        .product-card{
+            background:white;
+            padding:20px;
+            margin-bottom:25px;
+             border-radius:10px;
+            box-shadow:0 0 10px rgba(0,0,0,0.1);
+
+            width:300px;
+            display:inline-block;
+            vertical-align:top;
+            margin-right:20px;
+        }
+
+        button{
+            background:#2563eb;
+            color:white;
+            border:none;
+            padding:10px 20px;
+            border-radius:5px;
+            cursor:pointer;
+            font-size:16px;
+        }
+
+        button:hover{
+            background:#1d4ed8;
+        }
+
+        input{
+            width:300px;
+            padding:10px;
+            margin-bottom:15px;
+            border-radius:5px;
+            border:1px solid #ccc;
+            font-size:16px;
+        }
+
+        h1{
+            color:#07142b;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="navbar">
+
+        <a href="/">Home</a>
+
+        <a href="/cart/">Cart</a>
+
+        <a href="/seller-login/">Seller</a>
+
+        <a href="/admin/">Admin</a>
+
+        <a href="/orders/">Orders</a>
+
+        <a href="/delivery-login/">Delivery</a>
+
+    </div>
+
+    <div class="container">
+
+        {% block content %}
+
+        {% endblock %}
+
+    </div>
+
+</body>
+
+</html>

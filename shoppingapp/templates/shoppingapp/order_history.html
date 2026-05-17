@@ -1,0 +1,108 @@
+{% extends 'shoppingapp/base.html' %}
+
+{% block content %}
+
+<h1>Your Orders</h1>
+
+{% if orders %}
+
+{% for order in orders %}
+
+<div
+style="
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    margin-bottom:20px;
+"
+>
+
+    <h2>{{ order.product.name }}</h2>
+
+    <p>Quantity: {{ order.quantity }}</p>
+
+    <p>Delivery Type: {{ order.delivery_type }}</p>
+
+    <p>Warehouse: {{ order.warehouse }}</p>
+
+    <p>
+        Delivery Partner:
+        {{ order.delivery_partner }}
+    </p>
+
+    <p>
+        Reward Points:
+        {{ order.reward_points }}
+    </p>
+
+    <p>
+
+        Status:
+
+        {% if order.order_status == 'Placed' %}
+
+            <span style="color:blue;">
+                {{ order.order_status }}
+            </span>
+
+        {% elif order.order_status == 'Packed' %}
+
+            <span style="color:orange;">
+                {{ order.order_status }}
+            </span>
+
+        {% elif order.order_status == 'Dispatched' %}
+
+            <span style="color:purple;">
+                {{ order.order_status }}
+            </span>
+
+        {% elif order.order_status == 'Delivered' %}
+
+            <span style="color:green;">
+                {{ order.order_status }}
+            </span>
+
+        {% else %}
+
+            <span style="color:red;">
+                {{ order.order_status }}
+            </span>
+
+        {% endif %}
+
+    </p>
+
+    <br><br>
+
+<a href="/cancel-order/{{ order.id }}/">
+
+    <button
+    style="background:red;"
+    >
+        Cancel Order
+    </button>
+
+</a>
+
+<a href="/return-order/{{ order.id }}/">
+
+    <button
+    style="background:orange;"
+    >
+        Return Order
+    </button>
+
+</a>
+
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<h2>No orders yet</h2>
+
+{% endif %}
+
+{% endblock %}

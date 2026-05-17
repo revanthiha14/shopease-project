@@ -1,0 +1,109 @@
+{% extends 'shoppingapp/base.html' %}
+
+{% block content %}
+
+<h1>ShopEase Products</h1>
+
+<form method="GET" style="margin-bottom:30px;">
+
+    <input
+        type="text"
+        name="search"
+        placeholder="Search products..."
+        style="
+            padding:10px;
+            width:250px;
+            border-radius:5px;
+            border:1px solid gray;
+        "
+    >
+
+    <select
+        name="category"
+        style="
+            padding:10px;
+            border-radius:5px;
+        "
+    >
+
+        <option value="">All Categories</option>
+
+        {% for cat in categories %}
+
+        <option value="{{ cat }}">
+            {{ cat }}
+        </option>
+
+        {% endfor %}
+
+    </select>
+
+    <button
+        type="submit"
+        style="
+            padding:10px 15px;
+            background:#2563eb;
+            color:white;
+            border:none;
+            border-radius:5px;
+        "
+    >
+        Search
+    </button>
+
+</form>
+
+{% for product in products %}
+
+<div class="product-card">
+    {% if product.image_url %}
+
+    <img src="{{ product.image_url }}"
+         width="250"
+         height="200"
+         style="
+            border-radius:10px;
+            object-fit:cover;
+         ">
+
+    {% endif %}
+
+    <a
+    href="/product/{{ product.product_id }}/"
+    style="
+        text-decoration:none;
+        color:black;
+    "
+    >
+
+    <h2>{{ product.name }}</h2>
+
+    </a>
+
+    <p>Category: {{ product.category }}</p>
+
+    <p>Price: ₹{{ product.price }}</p>
+
+    <p>Stock: {{ product.stock }}</p>
+
+    <p>Seller:
+        {% if product.seller %}
+            {{ product.seller.username }}
+        {% else %}
+            Admin
+        {% endif %}
+    </p>
+
+    <a class="btn" href="/buy/{{ product.product_id }}/">
+        Buy Now
+    </a>
+
+    <a class="btn" href="/add-to-cart/{{ product.product_id }}/">
+        Add to Cart
+    </a>
+
+</div>
+
+{% endfor %}
+
+{% endblock %}
