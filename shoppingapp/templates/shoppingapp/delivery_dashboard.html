@@ -4,49 +4,68 @@
 
 <h1>Delivery Dashboard</h1>
 
-<h2>
-    Welcome {{ partner.username }}
-</h2>
-
-{% if orders %}
-
 {% for order in orders %}
 
-<div
-style="
-    background:white;
-    padding:20px;
-    border-radius:10px;
-    margin-bottom:20px;
-"
->
+<div style="
+padding:20px;
+margin:20px;
+background:white;
+border-radius:10px;
+box-shadow:0 0 10px lightgray;
+">
 
     <h2>{{ order.product.name }}</h2>
 
-    <p>Customer: {{ order.customer_name }}</p>
+    <p>
 
-    <p>Location: {{ order.customer_location }}</p>
+        Customer:
+        {{ order.customer_name }}
 
-    <p>Status: {{ order.order_status }}</p>
+    </p>
 
-    <p>Delivery Type: {{ order.delivery_type }}</p>
+    <p>
+
+        City:
+        {{ order.customer_location }}
+
+    </p>
+
+    <p>
+
+        Status:
+        {{ order.order_status }}
+
+    </p>
+
+    <p>
+
+        Delivery Type:
+        {{ order.delivery_type }}
+
+    </p>
 
     <a href="/update-status/{{ order.id }}/">
 
-        <button>
-            Update Status
+        <button style="
+        background:blue;
+        color:white;
+        border:none;
+        padding:10px;
+        border-radius:5px;
+        ">
+
+            Update Delivery Status
+
         </button>
 
     </a>
 
 </div>
 
+{% empty %}
+
+<h3>No delivery orders</h3>
+
 {% endfor %}
-
-{% else %}
-
-<h2>No assigned deliveries</h2>
-
-{% endif %}
 
 {% endblock %}

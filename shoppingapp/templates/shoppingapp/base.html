@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html>
 
 <head>
@@ -13,65 +14,22 @@
             background:#f4f4f4;
         }
 
-        .navbar{
-            background:#07142b;
+        nav{
+            background:#001133;
             padding:20px;
+            display:flex;
+            align-items:center;
+            gap:30px;
         }
 
-        .navbar a{
+        nav a{
             color:white;
             text-decoration:none;
-            margin-right:25px;
-            font-size:20px;
-            font-weight:bold;
-        }
-
-        .navbar a:hover{
-            color:#60a5fa;
+            font-size:22px;
         }
 
         .container{
             padding:30px;
-        }
-
-        .product-card{
-            background:white;
-            padding:20px;
-            margin-bottom:25px;
-             border-radius:10px;
-            box-shadow:0 0 10px rgba(0,0,0,0.1);
-
-            width:300px;
-            display:inline-block;
-            vertical-align:top;
-            margin-right:20px;
-        }
-
-        button{
-            background:#2563eb;
-            color:white;
-            border:none;
-            padding:10px 20px;
-            border-radius:5px;
-            cursor:pointer;
-            font-size:16px;
-        }
-
-        button:hover{
-            background:#1d4ed8;
-        }
-
-        input{
-            width:300px;
-            padding:10px;
-            margin-bottom:15px;
-            border-radius:5px;
-            border:1px solid #ccc;
-            font-size:16px;
-        }
-
-        h1{
-            color:#07142b;
         }
 
     </style>
@@ -80,21 +38,49 @@
 
 <body>
 
-    <div class="navbar">
+    <!-- NAVBAR -->
 
-        <a href="/">Home</a>
+    <nav>
 
-        <a href="/cart/">Cart</a>
+        <a href="/">
+            Home
+        </a>
 
-        <a href="/seller-login/">Seller</a>
+        <a href="/cart/">
+            Cart
+        </a>
 
-        <a href="/admin/">Admin</a>
+        <a href="/orders/">
+            Orders
+        </a>
 
-        <a href="/orders/">Orders</a>
+        <a href="/staff/">
+            Staff
+        </a>
 
-        <a href="/delivery-login/">Delivery</a>
+        {% if request.session.customer_name %}
 
-    </div>
+            <a href="/logout/"
+            style="margin-left:auto;">
+
+                Logout
+
+            </a>
+
+        {% else %}
+
+            <a href="/login/"
+            style="margin-left:auto;">
+
+                Login
+
+            </a>
+
+        {% endif %}
+
+    </nav>
+
+    <!-- PAGE CONTENT -->
 
     <div class="container">
 

@@ -2,47 +2,179 @@
 
 {% block content %}
 
-<h1>Checkout</h1>
+<h1>Payment Page</h1>
 
-<div class="product-card">
+<div style="
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 0 10px lightgray;
+max-width:700px;
+margin:auto;
+">
 
-<h2>Total Amount: ₹{{ total }}</h2>
+    <h2>Order Summary</h2>
 
-<form method="POST">
+    <hr>
 
-    {% csrf_token %}
+    {% for item in cart_items %}
 
-    <input
-    type="text"
-    placeholder="Card Number"
-    required
-    >
+        <div style="
+        margin-bottom:20px;
+        ">
 
-    <br>
+            <h3>
+                {{ item.product.name }}
+            </h3>
 
-    <input
-    type="text"
-    placeholder="Card Holder Name"
-    required
-    >
+            <p>
+                Quantity:
+                {{ item.quantity }}
+            </p>
 
-    <br>
+            <p>
+                Price:
+                ₹{{ item.product.price }}
+            </p>
 
-    <input
-    type="text"
-    placeholder="CVV"
-    required
-    >
+        </div>
 
-    <br>
+    {% endfor %}
 
-    <button type="submit">
+    <hr>
 
-        Pay Now
+    <h3>
+        Delivery Type:
+        {{ delivery_type }}
+    </h3>
 
-    </button>
+    <h3>
+        Delivery Charge:
+        ₹{{ delivery_charge }}
+    </h3>
 
-</form>
+    <h2 style="
+    color:green;
+    ">
+        Total:
+        ₹{{ total }}
+    </h2>
+
+    <h3>
+        Estimated Arrival:
+        {{ estimated_days }}
+    </h3>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <h2 style="
+        margin-top:30px;
+        ">
+            Select Payment Method
+        </h2>
+
+        <!-- COD -->
+
+        <div style="
+        margin-top:20px;
+        ">
+
+            <input
+            type="radio"
+            name="payment_method"
+            value="COD"
+            checked>
+
+            Cash on Delivery
+
+        </div>
+
+        <!-- UPI -->
+
+        <div style="
+        margin-top:15px;
+        ">
+
+            <input
+            type="radio"
+            name="payment_method"
+            value="UPI">
+
+            UPI Payment
+
+        </div>
+
+        <div style="
+        margin-top:10px;
+        ">
+
+            <input
+            type="text"
+            name="upi_id"
+            placeholder="Enter UPI ID"
+
+            style="
+            width:100%;
+            padding:12px;
+            border-radius:5px;
+            border:1px solid gray;
+            ">
+
+        </div>
+
+        <!-- CARD -->
+
+        <div style="
+        margin-top:20px;
+        ">
+
+            <input
+            type="radio"
+            name="payment_method"
+            value="Card">
+
+            Debit / Credit Card
+
+        </div>
+
+        <div style="
+        margin-top:10px;
+        ">
+
+            <input
+            type="text"
+            name="card_number"
+            placeholder="XXXX XXXX XXXX XXXX"
+
+            style="
+            width:100%;
+            padding:12px;
+            border-radius:5px;
+            border:1px solid gray;
+            ">
+
+        </div>
+
+        <button type="submit"
+
+        style="
+        margin-top:30px;
+        background:#2563eb;
+        color:white;
+        border:none;
+        padding:15px 30px;
+        border-radius:10px;
+        cursor:pointer;
+        font-size:18px;
+        ">
+
+            Place Order
+
+        </button>
+
+    </form>
 
 </div>
 

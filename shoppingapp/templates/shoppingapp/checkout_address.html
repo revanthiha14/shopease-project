@@ -1,0 +1,113 @@
+{% extends 'shoppingapp/base.html' %}
+
+{% block content %}
+
+<div
+style="
+    width:500px;
+    margin:auto;
+    background:white;
+    padding:40px;
+    border-radius:10px;
+"
+>
+
+<h1>Delivery Address</h1>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    <input
+    type="text"
+    name="full_name"
+    placeholder="Full Name"
+    required
+    >
+
+    <br><br>
+
+    <input
+    type="text"
+    name="phone"
+    placeholder="Phone Number"
+    required
+    >
+
+    <br><br>
+
+    <textarea
+    name="address_line"
+    placeholder="Full Address"
+    style="
+        width:300px;
+        height:100px;
+        padding:10px;
+    "
+    ></textarea>
+
+    <br><br>
+
+    <input
+    type="text"
+    name="city"
+    placeholder="City"
+    required
+    >
+
+    <br><br>
+
+    <input
+    type="text"
+    name="state"
+    placeholder="State"
+    required
+    >
+
+    <br><br>
+
+    <input
+    type="text"
+    name="pincode"
+    placeholder="Pincode"
+    required
+    >
+
+    <br><br>
+
+    <h3>Delivery Type</h3>
+
+    <input
+    type="radio"
+    name="delivery_type"
+    value="Normal"
+    checked
+    >
+
+    Normal Delivery
+    (₹40 | 3-5 days)
+
+    <br><br>
+
+    <input
+    type="radio"
+    name="delivery_type"
+    value="Fast"
+    >
+
+    Fast Delivery
+    (₹100 | 1-2 days)
+
+    <br><br>
+
+    <button type="submit">
+
+        Continue to Payment
+
+    </button>
+
+</form>
+
+</div>
+
+{% endblock %}

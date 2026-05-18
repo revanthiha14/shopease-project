@@ -67,10 +67,36 @@ class Order(models.Model):
     )
 
     reward_points = models.IntegerField(default=0)
+    
+    estimated_delivery = models.CharField(
+        max_length=100,
+        default="3 Days"
+    )
+    
+    payment_method = models.CharField(
+        max_length=50,
+        default="COD"
+    )
+    
+    package_id = models.CharField(
+        max_length=100,
+        default="PKG000"
+    )
 
+    packing_counter = models.CharField(
+        max_length=100,
+        default="Counter 1"
+    )
+    
+    priority = models.CharField(
+        max_length=50,
+        default="Low"
+    )
+    
     def __str__(self):
         return f"Order #{self.id} - {self.customer_name}"
     
+
     
 class Review(models.Model):
 
@@ -138,3 +164,62 @@ class Warehouse(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+class Customer(models.Model):
+
+    username = models.CharField(
+        max_length=100,
+        unique=True
+    )
+
+    email = models.EmailField()
+
+    password = models.CharField(
+        max_length=100
+    )
+
+    def __str__(self):
+
+        return self.username
+    
+
+class Address(models.Model):
+
+    customer = models.ForeignKey(
+        Customer,
+        on_delete=models.CASCADE
+    )
+
+    full_name = models.CharField(
+        max_length=100
+    )
+
+    phone = models.CharField(
+        max_length=15
+    )
+
+    address_line = models.TextField()
+
+    city = models.CharField(
+        max_length=100
+    )
+
+    state = models.CharField(
+        max_length=100
+    )
+
+    pincode = models.CharField(
+        max_length=10
+    )
+
+    is_default = models.BooleanField(
+        default=True
+    )
+
+    def __str__(self):
+
+        return (
+            f"{self.full_name} - "
+            f"{self.city}"
+        )

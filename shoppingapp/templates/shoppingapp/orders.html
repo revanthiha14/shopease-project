@@ -1,0 +1,444 @@
+{% extends 'shoppingapp/base.html' %}
+
+{% block content %}
+
+<h1>Your Orders</h1>
+
+{% for order in orders %}
+
+<div style="
+padding:20px;
+margin:20px;
+background:white;
+border-radius:10px;
+box-shadow:0 0 10px lightgray;
+">
+
+    <h2>{{ order.product.name }}</h2>
+
+    <p>
+        Quantity:
+        {{ order.quantity }}
+    </p>
+
+    <p>
+        Delivery Type:
+        {{ order.delivery_type }}
+    </p>
+
+    <p>
+        Warehouse:
+        {{ order.warehouse }}
+    </p>
+
+    <p>
+        Delivery Partner:
+        {{ order.delivery_partner }}
+    </p>
+
+    <p>
+
+        Priority:
+
+        {% if order.priority == "High" %}
+
+            <span style="
+            color:red;
+            font-weight:bold;
+            ">
+
+                High Priority
+
+            </span>
+
+        {% elif order.priority == "Medium" %}
+
+            <span style="
+            color:orange;
+            font-weight:bold;
+            ">
+
+                Medium Priority
+
+            </span>
+
+        {% else %}
+
+            <span style="
+            color:green;
+            font-weight:bold;
+            ">
+
+                Low Priority
+
+            </span>
+
+        {% endif %}
+
+    </p>
+
+
+    <p>
+        Package ID:
+        {{ order.package_id }}
+    </p>
+
+    <p>
+        Packing Counter:
+        {{ order.packing_counter }}
+    </p>
+
+
+    <p>
+        Reward Points:
+        {{ order.reward_points }}
+    </p>
+
+    {% if order.order_status == "Delivered" %}
+
+        <p style="
+        color:green;
+        font-weight:bold;
+        ">
+
+            Delivered Successfully
+
+        </p>
+
+    {% elif order.order_status == "Cancelled" %}
+
+        <p style="
+        color:red;
+        font-weight:bold;
+        ">
+
+            Order Cancelled
+
+        </p>
+
+    {% elif order.order_status == "Returned" %}
+
+        <p style="
+        color:black;
+        font-weight:bold;
+        ">
+
+            Order Returned
+
+        </p>
+
+    {% else %}
+
+        <p style="
+        color:green;
+        font-weight:bold;
+        ">
+
+            Estimated Delivery:
+            {{ order.estimated_delivery }}
+
+        </p>
+
+    {% endif %}
+
+
+    <!-- STATUS COLOR -->
+
+    <p>
+
+        Status:
+
+        {% if order.order_status == "Placed" %}
+
+            <b style="color:blue;">
+                {{ order.order_status }}
+            </b>
+
+        {% elif order.order_status == "Packed" %}
+
+            <b style="color:orange;">
+                {{ order.order_status }}
+            </b>
+
+        {% elif order.order_status == "Dispatched" %}
+
+            <b style="color:purple;">
+                {{ order.order_status }}
+            </b>
+
+        {% elif order.order_status == "Out for Delivery" %}
+
+            <b style="color:brown;">
+                {{ order.order_status }}
+            </b>
+
+        {% elif order.order_status == "Delivered" %}
+
+            <b style="color:green;">
+                {{ order.order_status }}
+            </b>
+
+        {% elif order.order_status == "Cancelled" %}
+
+            <b style="color:red;">
+                {{ order.order_status }}
+            </b>
+
+        {% elif order.order_status == "Returned" %}
+
+            <b style="color:black;">
+                {{ order.order_status }}
+            </b>
+
+        {% endif %}
+
+    </p>
+
+    <!-- TRACKING TIMELINE -->
+
+    <div style="
+    margin-top:20px;
+    padding:10px;
+    background:#f5f5f5;
+    border-radius:10px;
+    ">
+
+        <h3>Tracking Timeline</h3>
+
+        <!-- PROGRESS BAR -->
+
+        <div style="
+        display:flex;
+        align-items:center;
+        margin-top:20px;
+        margin-bottom:20px;
+        ">
+
+            <!-- PLACED -->
+
+            <div style="
+            width:40px;
+            height:40px;
+            border-radius:50%;
+            background:
+            {% if order.order_status == 'Placed' or order.order_status == 'Packed' or order.order_status == 'Dispatched' or order.order_status == 'Out for Delivery' or order.order_status == 'Delivered' %}
+            green
+            {% else %}
+            gray
+            {% endif %};
+            color:white;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            ">
+                1
+            </div>
+
+            <div style="
+            flex:1;
+            height:5px;
+            background:
+            {% if order.order_status == 'Packed' or order.order_status == 'Dispatched' or order.order_status == 'Out for Delivery' or order.order_status == 'Delivered' %}
+            green
+            {% else %}
+            gray
+            {% endif %};
+            ">
+            </div>
+
+            <!-- PACKED -->
+
+            <div style="
+            width:40px;
+            height:40px;
+            border-radius:50%;
+            background:
+            {% if order.order_status == 'Packed' or order.order_status == 'Dispatched' or order.order_status == 'Out for Delivery' or order.order_status == 'Delivered' %}
+            green
+            {% else %}
+            gray
+            {% endif %};
+            color:white;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            ">
+                2
+            </div>
+
+            <div style="
+            flex:1;
+            height:5px;
+            background:
+            {% if order.order_status == 'Dispatched' or order.order_status == 'Out for Delivery' or order.order_status == 'Delivered' %}
+            green
+            {% else %}
+            gray
+            {% endif %};
+            ">
+            </div>
+
+            <!-- DISPATCHED -->
+
+            <div style="
+            width:40px;
+            height:40px;
+            border-radius:50%;
+            background:
+            {% if order.order_status == 'Dispatched' or order.order_status == 'Out for Delivery' or order.order_status == 'Delivered' %}
+            green
+            {% else %}
+            gray
+            {% endif %};
+            color:white;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            ">
+                3
+            </div>
+
+            <div style="
+            flex:1;
+            height:5px;
+            background:
+            {% if order.order_status == 'Out for Delivery' or order.order_status == 'Delivered' %}
+            green
+            {% else %}
+            gray
+            {% endif %};
+            ">
+            </div>
+
+            <!-- DELIVERED -->
+
+            <div style="
+            width:40px;
+            height:40px;
+            border-radius:50%;
+            background:
+            {% if order.order_status == 'Delivered' %}
+            green
+            {% else %}
+            gray
+            {% endif %};
+            color:white;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            ">
+                4
+            </div>
+
+        </div>
+
+        <!-- LABELS -->
+
+        <div style="
+        display:flex;
+        justify-content:space-between;
+        font-size:14px;
+        margin-bottom:20px;
+        ">
+
+            <span>Placed</span>
+
+            <span>Packed</span>
+
+            <span>Dispatched</span>
+
+            <span>Delivered</span>
+
+        </div>
+
+        <!-- TIMELINE TEXT -->
+
+        <p>
+
+            {% if order.order_status == "Placed" %}
+
+                ✅ Order Placed
+
+            {% elif order.order_status == "Packed" %}
+
+                ✅ Order Placed
+                <br>
+                📦 Packed
+
+            {% elif order.order_status == "Dispatched" %}
+
+                ✅ Order Placed
+                <br>
+                📦 Packed
+                <br>
+                🚚 Dispatched
+
+            {% elif order.order_status == "Out for Delivery" %}
+
+                ✅ Order Placed
+                <br>
+                📦 Packed
+                <br>
+                🚚 Dispatched
+                <br>
+                🛵 Out for Delivery
+
+            {% elif order.order_status == "Delivered" %}
+
+                ✅ Order Placed
+                <br>
+                📦 Packed
+                <br>
+                🚚 Dispatched
+                <br>
+                🛵 Out for Delivery
+                <br>
+                🎉 Delivered
+
+            {% endif %}
+
+        </p>
+
+    </div>
+
+    <!-- ACTION BUTTONS -->
+
+    <a href="/cancel-order/{{ order.id }}/">
+
+        <button style="
+        background:red;
+        color:white;
+        border:none;
+        padding:10px;
+        border-radius:5px;
+        margin-top:20px;
+        ">
+            Cancel Order
+        </button>
+
+    </a>
+
+    <a href="/return-order/{{ order.id }}/">
+
+        <button style="
+        background:orange;
+        color:white;
+        border:none;
+        padding:10px;
+        border-radius:5px;
+        margin-top:20px;
+        ">
+            Return Order
+        </button>
+
+    </a>
+
+</div>
+
+{% empty %}
+
+<h3>No orders found</h3>
+
+{% endfor %}
+
+{% endblock %}

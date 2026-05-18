@@ -2,108 +2,175 @@
 
 {% block content %}
 
-<h1>ShopEase Products</h1>
+<h1 style="
+margin-bottom:30px;
+font-size:50px;
+">
+    ShopEase Products
+</h1>
 
-<form method="GET" style="margin-bottom:30px;">
-
-    <input
-        type="text"
-        name="search"
-        placeholder="Search products..."
-        style="
-            padding:10px;
-            width:250px;
-            border-radius:5px;
-            border:1px solid gray;
-        "
-    >
-
-    <select
-        name="category"
-        style="
-            padding:10px;
-            border-radius:5px;
-        "
-    >
-
-        <option value="">All Categories</option>
-
-        {% for cat in categories %}
-
-        <option value="{{ cat }}">
-            {{ cat }}
-        </option>
-
-        {% endfor %}
-
-    </select>
-
-    <button
-        type="submit"
-        style="
-            padding:10px 15px;
-            background:#2563eb;
-            color:white;
-            border:none;
-            border-radius:5px;
-        "
-    >
-        Search
-    </button>
-
-</form>
+<div style="
+display:grid;
+grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));
+gap:30px;
+">
 
 {% for product in products %}
 
-<div class="product-card">
-    {% if product.image_url %}
+<div style="
+background:white;
+padding:20px;
+border-radius:15px;
+box-shadow:0 0 10px lightgray;
+transition:0.3s;
+">
 
-    <img src="{{ product.image_url }}"
-         width="250"
-         height="200"
-         style="
-            border-radius:10px;
-            object-fit:cover;
-         ">
+    <!-- PRODUCT IMAGE -->
+
+    <a href="/product/{{ product.product_id }}/">
+
+        <img
+        src="{{ product.image_url }}"
+        alt="{{ product.name }}"
+
+        style="
+        width:100%;
+        height:250px;
+        object-fit:cover;
+        border-radius:10px;
+        cursor:pointer;
+        ">
+
+    </a>
+
+    <!-- PRODUCT NAME -->
+
+    <h2 style="margin-top:20px;">
+
+        <a href="/product/{{ product.product_id }}/"
+        style="
+        text-decoration:none;
+        color:black;
+        ">
+
+            {{ product.name }}
+
+        </a>
+
+    </h2>
+
+    <!-- CATEGORY -->
+
+    <p>
+
+        Category:
+        {{ product.category }}
+
+    </p>
+
+    <!-- PRICE -->
+
+    <p style="
+    font-size:22px;
+    font-weight:bold;
+    ">
+
+        ₹{{ product.price }}
+
+    </p>
+
+    <!-- LOW STOCK WARNING -->
+
+    {% if product.stock == 0 %}
+
+        <p style="
+        color:red;
+        font-weight:bold;
+        ">
+            Out of Stock
+        </p>
+
+    {% elif product.stock <= 5 %}
+
+        <p style="
+        color:orange;
+        font-weight:bold;
+        ">
+            Only {{ product.stock }} left!
+        </p>
 
     {% endif %}
 
-    <a
-    href="/product/{{ product.product_id }}/"
-    style="
-        text-decoration:none;
-        color:black;
-    "
-    >
+    <!-- BUTTONS -->
 
-    <h2>{{ product.name }}</h2>
+    {% if product.stock > 0 %}
 
-    </a>
+        <div style="
+        display:flex;
+        gap:10px;
+        margin-top:20px;
+        ">
 
-    <p>Category: {{ product.category }}</p>
+            <a href="/buy/{{ product.product_id }}/">
 
-    <p>Price: ₹{{ product.price }}</p>
+                <button style="
+                background:#2563eb;
+                color:white;
+                border:none;
+                padding:12px 20px;
+                border-radius:5px;
+                cursor:pointer;
+                font-size:16px;
+                ">
 
-    <p>Stock: {{ product.stock }}</p>
+                    Buy Now
 
-    <p>Seller:
-        {% if product.seller %}
-            {{ product.seller.username }}
-        {% else %}
-            Admin
-        {% endif %}
-    </p>
+                </button>
 
-    <a class="btn" href="/buy/{{ product.product_id }}/">
-        Buy Now
-    </a>
+            </a>
 
-    <a class="btn" href="/add-to-cart/{{ product.product_id }}/">
-        Add to Cart
-    </a>
+            <a href="/add-to-cart/{{ product.product_id }}/">
+
+                <button style="
+                background:#2563eb;
+                color:white;
+                border:none;
+                padding:12px 20px;
+                border-radius:5px;
+                cursor:pointer;
+                font-size:16px;
+                ">
+
+                    Add to Cart
+
+                </button>
+
+            </a>
+
+        </div>
+
+    {% else %}
+
+        <button style="
+        background:gray;
+        color:white;
+        border:none;
+        padding:12px 20px;
+        border-radius:5px;
+        margin-top:20px;
+        cursor:not-allowed;
+        " disabled>
+
+            Out of Stock
+
+        </button>
+
+    {% endif %}
 
 </div>
 
 {% endfor %}
+
+</div>
 
 {% endblock %}
