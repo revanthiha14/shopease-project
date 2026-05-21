@@ -2,27 +2,221 @@
 
 {% block content %}
 
-<div class="container">
+<div style="
+max-width:600px;
+margin:auto;
+background:white;
+padding:50px;
+border-radius:25px;
+box-shadow:0 0 20px lightgray;
+margin-top:60px;
+">
 
-    <div class="product-card">
+    <!-- TITLE -->
 
-        <h1>Seller Login</h1>
+    <div style="
+    text-align:center;
+    margin-bottom:40px;
+    ">
 
-        <form method="POST">
+        <h1 style="
+        font-size:55px;
+        margin-bottom:10px;
+        ">
 
-            {% csrf_token %}
+            🛍
 
-            <input type="text"
-                   name="username"
-                   placeholder="Enter Seller Name">
+        </h1>
 
-            <br>
+        <h1>
 
-            <button type="submit">
-                Login
-            </button>
+            Become a Seller
 
-        </form>
+        </h1>
+
+        <p style="
+        color:gray;
+        font-size:18px;
+        line-height:1.8;
+        ">
+
+            Start selling products,
+            manage inventory and
+            grow your business with
+            SHOPEASE.
+
+        </p>
+
+    </div>
+
+    <!-- LOGIN FORM -->
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <label style="
+        font-weight:bold;
+        ">
+
+            Seller Name
+
+        </label>
+
+        <input
+        type="text"
+        name="seller_name"
+        placeholder="Enter Seller Name"
+
+        style="
+        width:100%;
+        padding:15px;
+        border-radius:12px;
+        border:1px solid gray;
+        margin-top:10px;
+        margin-bottom:25px;
+        font-size:16px;
+        ">
+
+        <label style="
+        font-weight:bold;
+        ">
+
+            Business Email
+
+        </label>
+
+        <input
+        type="email"
+        name="business_email"
+        placeholder="Enter Business Email"
+
+        style="
+        width:100%;
+        padding:15px;
+        border-radius:12px;
+        border:1px solid gray;
+        margin-top:10px;
+        margin-bottom:25px;
+        font-size:16px;
+        ">
+
+        <label style="
+        font-weight:bold;
+        ">
+
+            Business Type
+
+        </label>
+
+        <select
+        
+        name="business_type"
+
+        style="
+        width:100%;
+        padding:15px;
+        border-radius:12px;
+        border:1px solid gray;
+        margin-top:10px;
+        margin-bottom:35px;
+        font-size:16px;
+        ">
+
+            <option>
+                Electronics
+            </option>
+
+            <option>
+                Fashion
+            </option>
+
+            <option>
+                Grocery
+            </option>
+
+            <option>
+                Books
+            </option>
+
+            <option>
+                Sports
+            </option>
+
+        </select>
+
+        <button type="submit"
+
+        style="
+        width:100%;
+        background:#2563eb;
+        color:white;
+        border:none;
+        padding:16px;
+        border-radius:12px;
+        font-size:20px;
+        cursor:pointer;
+        ">
+
+            Access Seller Portal
+
+        </button>
+
+    </form>
+
+    <!-- FEATURES -->
+
+    <div style="
+    margin-top:40px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));
+    gap:20px;
+    ">
+
+        <div style="
+        background:#f3f4f6;
+        padding:20px;
+        border-radius:15px;
+        text-align:center;
+        ">
+
+            📦
+
+            <p>
+                Product Management
+            </p>
+
+        </div>
+
+        <div style="
+        background:#f3f4f6;
+        padding:20px;
+        border-radius:15px;
+        text-align:center;
+        ">
+
+            📈
+
+            <p>
+                Inventory Tracking
+            </p>
+
+        </div>
+
+        <div style="
+        background:#f3f4f6;
+        padding:20px;
+        border-radius:15px;
+        text-align:center;
+        ">
+
+            🚚
+
+            <p>
+                Logistics Support
+            </p>
+
+        </div>
 
     </div>
 

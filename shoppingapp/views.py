@@ -11,23 +11,47 @@ from django.utils import timezone
 
 def product_list(request):
 
+    category = request.GET.get(
+        'category'
+    )
+
+    query = request.GET.get(
+        'q'
+    )
+
     products = Product.objects.all()
 
-    customer_name = request.session.get(
-        'customer_name',
-        'Guest'
-    )
+    if category:
+
+        products = products.filter(
+            category=category
+        )
+
+    if query:
+
+        products = products.filter(
+            name__icontains=query
+        )
+
+    categories = Product.objects.values_list(
+        'category',
+        flat=True
+    ).distinct()
 
     return render(
+
         request,
+
         'shoppingapp/product_list.html',
+
         {
             'products': products,
-            'customer_name': customer_name
+
+            'categories': categories,
+
+            'selected_category': category
         }
     )
-
-
 # ==========================================
 # LOGIN
 # ==========================================
@@ -449,25 +473,40 @@ def assign_warehouse(city):
 # ASSIGN DELIVERY PARTNER
 # ==========================================
 
-def assign_delivery_partner():
+def assign_delivery_partners():
 
-    partner = DeliveryPartner.objects.filter(
-        is_available=True
-    ).order_by(
-        'assigned_orders'
-    ).first()
+    orders = Order.objects.filter(
+        delivery_partner__isnull=True
+    )
 
-    if partner:
+    for order in orders:
 
-        partner.assigned_orders += 1
+        customer_state = order.state
 
-        partner.save()
+        delivery_partner = DeliveryPartner.objects.filter(
 
-        return partner
+            is_available=True,
 
-    return None
+            state=customer_state
 
+        ).first()
 
+        if delivery_partner:
+
+            order.delivery_partner = delivery_partner
+
+            order.save()
+
+            delivery_partner.is_available = False
+
+            delivery_partner.save()
+
+        else:
+
+            order.order_status = "Delayed"
+
+            order.save()
+            
 # ==========================================
 # PAYMENT PAGE
 # ==========================================
@@ -513,16 +552,39 @@ def payment_page(request):
 
     total += delivery_charge
 
+    customer = Customer.objects.get(
+
+        id=request.session.get(
+            'customer_id'
+        )
+    )
+
+    discount = 0
+
     if request.method == "POST":
-        
+
+        use_rewards = request.POST.get(
+            'use_rewards'
+        )
+
+        if use_rewards:
+
+            if customer.reward_points >= 100:
+
+                discount = 100
+
+                customer.reward_points -= 100
+
+                customer.save()
+
+                total -= discount
+
         payment_method = request.POST.get(
             'payment_method'
         )
-        
-        customer = Customer.objects.get(
-            id=request.session.get(
-                'customer_id'
-            )
+
+        selected_state = request.POST.get(
+            'state'
         )
 
         address = Address.objects.filter(
@@ -532,8 +594,6 @@ def payment_page(request):
         warehouse = assign_warehouse(
             address.city
         )
-
-        partner = assign_delivery_partner()
 
         # DELIVERY ESTIMATION
 
@@ -556,8 +616,7 @@ def payment_page(request):
             else:
 
                 estimated_delivery = "5 Days"
-        
-        
+
         for item in cart_items:
 
             reward_points = int(
@@ -571,18 +630,20 @@ def payment_page(request):
             if item.product.price > 5000:
 
                 reward_points += 50
-            
+
+            customer.reward_points += reward_points
+
             package_id = (
                 "PKG" +
                 str(item.product.product_id) +
                 str(customer.id)
             )
-            
+
             packing_counter = (
                 "Counter " +
                 str((item.product.product_id % 3) + 1)
             )
-            
+
             # PRIORITY LOGIC
 
             if delivery_type == "Fast":
@@ -596,7 +657,7 @@ def payment_page(request):
             else:
 
                 priority = "Low"
-            
+
             Order.objects.create(
 
                 customer_name=customer.username,
@@ -613,33 +674,42 @@ def payment_page(request):
 
                 warehouse=warehouse,
 
-                delivery_partner=partner,
-
                 reward_points=reward_points,
-                
+
                 estimated_delivery=estimated_delivery,
-                
+
                 package_id=package_id,
-                    
+
                 packing_counter=packing_counter,
-                
-                priority=priority    
+
+                priority=priority,
+
+                state=selected_state
             )
-            
+
             item.product.stock -= item.quantity
-            
+
             item.product.save()
 
+        customer.save()
+
+        assign_delivery_partners()
 
         cart_items.delete()
 
-        return HttpResponse(
-            "Order placed successfully"
+        return render(
+
+            request,
+
+            'shoppingapp/order_success.html'
         )
 
     return render(
+
         request,
+
         'shoppingapp/payment.html',
+
         {
             'cart_items': cart_items,
 
@@ -659,14 +729,6 @@ def payment_page(request):
 # ==========================================
 
 def order_history(request):
-    
-    update_order_statuses()
-    
-    if not request.session.get(
-        'customer_name'
-    ):
-
-        return redirect('/login/')
 
     customer_name = request.session.get(
         'customer_name'
@@ -674,11 +736,14 @@ def order_history(request):
 
     orders = Order.objects.filter(
         customer_name=customer_name
-    ).order_by('-id')
+    )
 
     return render(
+
         request,
+
         'shoppingapp/orders.html',
+
         {
             'orders': orders
         }
@@ -727,21 +792,42 @@ def seller_login(request):
     if request.method == "POST":
 
         seller_name = request.POST.get(
-            "username"
-        )
-
-        request.session[
             'seller_name'
-        ] = seller_name
-
-        return HttpResponse(
-            "Seller logged in successfully"
         )
 
-    return HttpResponse(
-        "Seller Login Page"
+        business_email = request.POST.get(
+            'business_email'
+        )
+
+        business_type = request.POST.get(
+            'business_type'
+        )
+
+        seller, created = Seller.objects.get_or_create(
+
+            username=seller_name
+        )
+
+        seller.shop_name = seller_name
+
+        seller.business_email = business_email
+
+        seller.business_type = business_type
+
+        seller.save()
+
+        request.session['seller_id'] = seller.id
+
+        request.session['seller_name'] = seller.username
+
+        return redirect('/seller-dashboard/')
+
+    return render(
+
+        request,
+
+        'shoppingapp/seller_login.html'
     )
-    
     
 def delivery_login(request):
 
@@ -766,30 +852,53 @@ def delivery_login(request):
     
 def seller_add_product(request):
 
-    seller_name = request.session.get(
-        'seller_name',
-        'Unknown Seller'
+    seller_id = request.session.get(
+        'seller_id'
     )
 
-    Product.objects.create(
+    if not seller_id:
 
-        name="New Product",
+        return redirect('/seller-login/')
 
-        category="Electronics",
-
-        price=999,
-
-        stock=10,
-
-        seller_name=seller_name,
-
-        image_url="https://via.placeholder.com/200"
+    seller = Seller.objects.get(
+        id=seller_id
     )
 
-    return HttpResponse(
-        f"Product added by seller {seller_name}"
+    if request.method == "POST":
+
+        Product.objects.create(
+
+            seller=seller,
+
+            name=request.POST.get(
+                'name'
+            ),
+
+            category=request.POST.get(
+                'category'
+            ),
+
+            price=request.POST.get(
+                'price'
+            ),
+
+            stock=request.POST.get(
+                'stock'
+            ),
+
+            image_url=request.POST.get(
+                'image_url'
+            )
+        )
+
+        return redirect('/seller-dashboard/')
+
+    return render(
+
+        request,
+
+        'shoppingapp/seller_add_product.html'
     )
-    
     
 # ==========================================
 # REMOVE CART ITEM
@@ -822,9 +931,7 @@ def seller_dashboard(request):
             "Seller not logged in"
         )
 
-    products = Product.objects.filter(
-        seller_name=seller_name
-    )
+    products = Product.objects.all()
 
     return render(
         request,
@@ -846,11 +953,58 @@ def product_detail(request, product_id):
         product_id=product_id
     )
 
+    reviews = Review.objects.filter(
+        product=product
+    )
+
+    recommended_products = Product.objects.filter(
+        category=product.category
+    ).exclude(
+        product_id=product.product_id
+    )[:4]
+
+    if request.method == "POST":
+
+        customer_name = request.session.get(
+            'customer_name',
+            'Anonymous'
+        )
+
+        rating = request.POST.get(
+            'rating'
+        )
+
+        comment = request.POST.get(
+            'comment'
+        )
+
+        Review.objects.create(
+
+            product=product,
+
+            customer_name=customer_name,
+
+            rating=rating,
+
+            comment=comment
+        )
+
+        return redirect(
+            f'/product/{product_id}/'
+        )
+
     return render(
+
         request,
+
         'shoppingapp/product_detail.html',
+
         {
-            'product': product
+            'product': product,
+
+            'reviews': reviews,
+            
+            'recommended_products': recommended_products
         }
     )
 
@@ -859,19 +1013,24 @@ def product_detail(request, product_id):
 # DELIVERY DASHBOARD
 # ==========================================
 
+
 def delivery_dashboard(request):
 
     orders = Order.objects.exclude(
-        order_status="Delivered"
-    ).exclude(
-        order_status="Cancelled"
-    ).exclude(
-        order_status="Returned"
+
+        order_status='Delivered'
+
+    ).order_by(
+
+        '-delivery_type'
     )
 
     return render(
+
         request,
+
         'shoppingapp/delivery_dashboard.html',
+
         {
             'orders': orders
         }
@@ -891,25 +1050,20 @@ def cancel_order(request, order_id):
 
     order.save()
 
-    return redirect('/orders/')
+    return redirect('orders')
 
 
-# ==========================================
-# RETURN ORDER
-# ==========================================
-
-def return_order(request, order_id):
+def return_order(request,order_id):
 
     order = Order.objects.get(
         id=order_id
     )
 
-    order.order_status = "Returned"
+    order.order_status = "Return Requested"
 
     order.save()
 
-    return redirect('/orders/')
-
+    return redirect('orders')
 
 # ==========================================
 # UPDATE DELIVERY STATUS
@@ -947,47 +1101,79 @@ def update_delivery_status(request, order_id):
 
 def staff_portal(request):
 
-    return render(
-        request,
-        'shoppingapp/staff_portal.html'
-    )
+    workers = Worker.objects.all()
 
-def update_order_statuses():
+    return render(
+
+        request,
+
+        'shoppingapp/staff_portal.html',
+
+        {
+            'workers': workers
+        }
+    )
+    
+        
+def analytics_dashboard(request):
+
+    total_products = Product.objects.count()
+
+    total_orders = Order.objects.count()
+
+    delivered_orders = Order.objects.filter(
+        order_status="Delivered"
+    ).count()
+
+    cancelled_orders = Order.objects.filter(
+        order_status="Cancelled"
+    ).count()
+    
+    fast_orders = Order.objects.filter(
+        delivery_type="Fast"
+    ).count()
+
+    delayed_orders = Order.objects.filter(
+        order_status="Delayed"
+    ).count()
+
+    successful_orders = Order.objects.filter(
+        order_status="Delivered"
+    ).count()
 
     orders = Order.objects.all()
 
+    total_revenue = 0
+
     for order in orders:
 
-        time_passed = timezone.now() - order.order_time
+        total_revenue += (
+            order.product.price *
+            order.quantity
+        )
 
-        hours = time_passed.total_seconds() / 3600
+    return render(
 
-        if order.delivery_type == "Fast":
+        request,
 
-            if hours >= 1:
+        'shoppingapp/analytics.html',
 
-                order.order_status = "Packed"
+        {
+            'total_products': total_products,
 
-            if hours >= 2:
+            'total_orders': total_orders,
 
-                order.order_status = "Dispatched"
+            'delivered_orders': delivered_orders,
 
-            if hours >= 3:
+            'cancelled_orders': cancelled_orders,
 
-                order.order_status = "Delivered"
+            'total_revenue': total_revenue,
+            
+            'fast_orders': fast_orders,
 
-        else:
+            'delayed_orders': delayed_orders,
 
-            if hours >= 2:
-
-                order.order_status = "Packed"
-
-            if hours >= 4:
-
-                order.order_status = "Dispatched"
-
-            if hours >= 6:
-
-                order.order_status = "Delivered"
-
-        order.save()
+            'successful_orders': successful_orders
+        }
+    )
+    

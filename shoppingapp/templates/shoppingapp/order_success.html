@@ -1,0 +1,96 @@
+{% extends 'shoppingapp/base.html' %}
+
+{% block content %}
+
+<div style="
+max-width:700px;
+margin:auto;
+margin-top:80px;
+background:white;
+padding:60px;
+border-radius:25px;
+box-shadow:0 0 20px lightgray;
+text-align:center;
+">
+
+    <div style="
+    font-size:90px;
+    margin-bottom:20px;
+    ">
+
+        ✅
+
+    </div>
+
+    <h1 style="
+    color:#16a34a;
+    margin-bottom:20px;
+    font-size:45px;
+    ">
+
+        Order Placed Successfully
+
+    </h1>
+
+    <p style="
+    font-size:20px;
+    color:gray;
+    line-height:1.8;
+    margin-bottom:40px;
+    ">
+
+        Your order has been confirmed
+        and is now being processed
+        through our warehouse and
+        logistics network.
+
+    </p>
+
+    <div style="
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+    ">
+
+        <a href="/orders/">
+
+            <button style="
+            background:#2563eb;
+            color:white;
+            border:none;
+            padding:15px 30px;
+            border-radius:12px;
+            font-size:18px;
+            cursor:pointer;
+            ">
+
+                View Orders
+
+            </button>
+
+        </a>
+
+        <a href="/">
+
+            <button style="
+            background:black;
+            color:white;
+            border:none;
+            padding:15px 30px;
+            border-radius:12px;
+            font-size:18px;
+            cursor:pointer;
+            ">
+
+                Continue Shopping
+
+            </button>
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,186 @@
+{% extends 'shoppingapp/base.html' %}
+
+{% block content %}
+
+<h1>
+    Analytics Dashboard
+</h1>
+
+<div style="
+display:grid;
+grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
+gap:30px;
+margin-top:40px;
+">
+
+    <!-- TOTAL PRODUCTS -->
+
+    <div style="
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 0 10px lightgray;
+    ">
+
+        <h2>Total Products</h2>
+
+        <h1 style="
+        color:#2563eb;
+        ">
+
+            {{ total_products }}
+
+        </h1>
+
+    </div>
+
+    <!-- TOTAL ORDERS -->
+
+    <div style="
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 0 10px lightgray;
+    ">
+
+        <h2>Total Orders</h2>
+
+        <h1 style="
+        color:green;
+        ">
+
+            {{ total_orders }}
+
+        </h1>
+
+    </div>
+
+    <!-- DELIVERED -->
+
+    <div style="
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 0 10px lightgray;
+    ">
+
+        <h2>Delivered Orders</h2>
+
+        <h1 style="
+        color:orange;
+        ">
+
+            {{ delivered_orders }}
+
+        </h1>
+
+    </div>
+
+    <!-- CANCELLED -->
+
+    <div style="
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 0 10px lightgray;
+    ">
+
+        <h2>Cancelled Orders</h2>
+
+        <h1 style="
+        color:red;
+        ">
+
+            {{ cancelled_orders }}
+
+        </h1>
+
+    </div>
+
+    <!-- REVENUE -->
+
+    <div style="
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 0 10px lightgray;
+    ">
+
+        <h2>Total Revenue</h2>
+
+        <h1 style="
+        color:black;
+        ">
+
+            ₹{{ total_revenue }}
+
+        </h1>
+
+    </div>
+
+</div>
+
+<!-- FAST ORDERS -->
+
+<div style="
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 0 10px lightgray;
+">
+
+    <h2>Fast Delivery Orders</h2>
+
+    <h1 style="
+    color:#2563eb;
+    ">
+
+        {{ fast_orders }}
+
+    </h1>
+
+</div>
+
+<!-- DELAYED -->
+
+<div style="
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 0 10px lightgray;
+">
+
+    <h2>Delayed Orders</h2>
+
+    <h1 style="
+    color:red;
+    ">
+
+        {{ delayed_orders }}
+
+    </h1>
+
+</div>
+
+<!-- SUCCESS -->
+
+<div style="
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 0 10px lightgray;
+">
+
+    <h2>Successfully Delivered</h2>
+
+    <h1 style="
+    color:green;
+    ">
+
+        {{ successful_orders }}
+
+    </h1>
+
+</div>
+
+{% endblock %}

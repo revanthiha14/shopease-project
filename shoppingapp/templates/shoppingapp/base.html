@@ -4,7 +4,7 @@
 
 <head>
 
-    <title>ShopEase</title>
+    <title>SHOPEASE</title>
 
     <style>
 
@@ -14,22 +14,128 @@
             background:#f4f4f4;
         }
 
+        /* NAVBAR */
+
         nav{
             background:#001133;
-            padding:20px;
+            padding:20px 40px;
             display:flex;
             align-items:center;
             gap:30px;
+            box-shadow:0 0 10px rgba(0,0,0,0.2);
+            position:sticky;
+            top:0;
+            z-index:1000;
         }
 
         nav a{
             color:white;
             text-decoration:none;
-            font-size:22px;
+            font-size:20px;
+            transition:0.3s;
         }
 
+        nav a:hover{
+            color:#60a5fa;
+        }
+
+        .logo{
+            font-size:32px;
+            font-weight:bold;
+            letter-spacing:2px;
+        }
+
+        .nav-right{
+            margin-left:auto;
+            display:flex;
+            gap:25px;
+            align-items:center;
+        }
+
+        /* CONTAINER */
+
         .container{
-            padding:30px;
+            padding:40px;
+            min-height:70vh;
+        }
+
+        /* COMMON BUTTON */
+
+        .btn{
+            background:#2563eb;
+            color:white;
+            border:none;
+            padding:12px 24px;
+            border-radius:10px;
+            cursor:pointer;
+            font-size:16px;
+            transition:0.3s;
+        }
+
+        .btn:hover{
+            background:#1d4ed8;
+        }
+
+        /* CARD */
+
+        .card{
+            background:white;
+            border-radius:20px;
+            padding:25px;
+            box-shadow:0 0 15px lightgray;
+        }
+
+        /* FOOTER */
+
+        footer{
+            margin-top:80px;
+            background:#000814;
+            color:white;
+            padding:60px 50px;
+        }
+
+        .footer-container{
+            display:flex;
+            justify-content:space-between;
+            flex-wrap:wrap;
+            gap:50px;
+        }
+
+        .footer-section h2{
+            margin-bottom:20px;
+        }
+
+        .footer-section p{
+            color:#cbd5e1;
+            line-height:1.8;
+        }
+
+        .footer-brand{
+            max-width:420px;
+        }
+
+        .footer-bottom{
+            text-align:center;
+            margin-top:40px;
+            color:#94a3b8;
+        }
+
+        /* RESPONSIVE */
+
+        @media(max-width:768px){
+
+            nav{
+                flex-wrap:wrap;
+            }
+
+            .container{
+                padding:20px;
+            }
+
+            .footer-container{
+                flex-direction:column;
+            }
+
         }
 
     </style>
@@ -41,6 +147,13 @@
     <!-- NAVBAR -->
 
     <nav>
+
+        <a href="/"
+        class="logo">
+
+            SHOPEASE
+
+        </a>
 
         <a href="/">
             Home
@@ -54,33 +167,31 @@
             Orders
         </a>
 
-        <a href="/staff/">
-            Staff
+        <a href="/seller-login/">
+            Become a Seller
         </a>
 
-        {% if request.session.customer_name %}
+        <div class="nav-right">
 
-            <a href="/logout/"
-            style="margin-left:auto;">
+            {% if request.session.customer_name %}
 
-                Logout
+                <a href="/logout/">
+                    Logout
+                </a>
 
-            </a>
+            {% else %}
 
-        {% else %}
+                <a href="/login/">
+                    Login
+                </a>
 
-            <a href="/login/"
-            style="margin-left:auto;">
+            {% endif %}
 
-                Login
-
-            </a>
-
-        {% endif %}
+        </div>
 
     </nav>
 
-    <!-- PAGE CONTENT -->
+    <!-- MAIN CONTENT -->
 
     <div class="container">
 
@@ -89,6 +200,105 @@
         {% endblock %}
 
     </div>
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <div class="footer-container">
+
+            <!-- BRAND -->
+
+            <div class="footer-section footer-brand">
+
+                <h1 style="
+                font-size:42px;
+                letter-spacing:2px;
+                ">
+
+                    SHOPEASE
+
+                </h1>
+
+                <p>
+
+                    Modern Ecommerce and
+                    Logistics Management Platform
+                    focused on fast delivery,
+                    smart warehousing and
+                    optimized order processing.
+
+                </p>
+
+            </div>
+
+            <!-- FEATURES -->
+
+            <div class="footer-section">
+
+                <h2>
+                    Features
+                </h2>
+
+                <p>
+                    ⚡ HyperFast Logistics
+                </p>
+
+                <p>
+                    📦 Smart Warehousing
+                </p>
+
+                <p>
+                    🚚 Live Order Tracking
+                </p>
+
+                <p>
+                    ⚙ Smart Order Processing
+                </p>
+
+            </div>
+
+            <!-- SERVICES -->
+
+            <div class="footer-section">
+
+                <h2>
+                    Services
+                </h2>
+
+                <p>
+                    Fast Delivery
+                </p>
+
+                <p>
+                    Secure Payments
+                </p>
+
+                <p>
+                    Inventory Management
+                </p>
+
+                <p>
+                    Seller Management
+                </p>
+
+            </div>
+
+        </div>
+
+        <hr style="
+        margin-top:40px;
+        border-color:gray;
+        ">
+
+        <div class="footer-bottom">
+
+            © 2026 SHOPEASE.
+            Smarter Shopping Starts Here.
+
+        </div>
+
+    </footer>
 
 </body>
 

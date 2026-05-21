@@ -2,37 +2,91 @@
 
 {% block content %}
 
-<div class="container">
+<h1>
+    Seller Dashboard
+</h1>
 
-    <h1>Seller Dashboard</h1>
+<div style="
+margin-bottom:30px;
+">
 
-    <div class="product-card">
+    <a href="/seller-add-product/">
 
-        <h2>Welcome {{ seller.username }}</h2>
+        <button style="
+        background:#2563eb;
+        color:white;
+        border:none;
+        padding:15px 30px;
+        border-radius:10px;
+        font-size:18px;
+        cursor:pointer;
+        ">
 
-        <a href="/seller-add-product/">
-            <button>Add Product</button>
-        </a>
+            Add Product
 
-    </div>
+        </button>
 
-    <h2>Your Products</h2>
+    </a>
 
-    {% for product in products %}
+</div>
 
-    <div class="product-card">
+<div style="
+display:grid;
+grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));
+gap:30px;
+">
 
-        <h3>{{ product.name }}</h3>
+{% for product in products %}
 
-        <p>Category: {{ product.category }}</p>
+<div style="
+background:white;
+padding:20px;
+border-radius:15px;
+box-shadow:0 0 10px lightgray;
+">
 
-        <p>Price: ₹{{ product.price }}</p>
+    <img
+    src="{{ product.image_url }}"
 
-        <p>Stock: {{ product.stock }}</p>
+    style="
+    width:100%;
+    height:220px;
+    object-fit:cover;
+    border-radius:10px;
+    ">
 
-    </div>
+    <h2 style="
+    margin-top:20px;
+    ">
 
-    {% endfor %}
+        {{ product.name }}
+
+    </h2>
+
+    <p>
+        Category:
+        {{ product.category }}
+    </p>
+
+    <p>
+        Price:
+        ₹{{ product.price }}
+    </p>
+
+    <p>
+        Stock:
+        {{ product.stock }}
+    </p>
+
+</div>
+
+{% empty %}
+
+<h3>
+    No products added yet
+</h3>
+
+{% endfor %}
 
 </div>
 

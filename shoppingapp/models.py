@@ -93,11 +93,15 @@ class Order(models.Model):
         default="Low"
     )
     
+    state = models.CharField(
+        max_length=100,
+        default="South India"
+    )
+    
     def __str__(self):
         return f"Order #{self.id} - {self.customer_name}"
     
 
-    
 class Review(models.Model):
 
     product = models.ForeignKey(
@@ -113,17 +117,13 @@ class Review(models.Model):
 
     comment = models.TextField()
 
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
-
     def __str__(self):
 
         return (
-            f"{self.customer_name} - "
-            f"{self.product.name}"
+            self.customer_name +
+            " - " +
+            self.product.name
         )
-        
 
     
 class Cart(models.Model):
@@ -141,7 +141,10 @@ class Seller(models.Model):
     shop_name = models.CharField(max_length=100, default="My Shop")
     email = models.EmailField(default="seller@gmail.com")
     phone = models.CharField(max_length=15, default="0000000000")
-
+    business_email = models.EmailField(blank=True,null=True)
+    business_type = models.CharField(max_length=100,blank=True,null=True)
+    
+    
     def __str__(self):
         return self.shop_name
 
@@ -152,6 +155,7 @@ class DeliveryPartner(models.Model):
     current_status = models.CharField(max_length=50, default="Available")
     is_available = models.BooleanField(default=True)
     assigned_orders = models.IntegerField(default=0)
+    state = models.CharField(max_length=100,default="Tamil Nadu")
 
     def __str__(self):
         return self.username
@@ -178,7 +182,11 @@ class Customer(models.Model):
     password = models.CharField(
         max_length=100
     )
-
+    
+    reward_points = models.IntegerField(
+        default=0
+    )
+    
     def __str__(self):
 
         return self.username
@@ -223,3 +231,23 @@ class Address(models.Model):
             f"{self.full_name} - "
             f"{self.city}"
         )
+        
+class Worker(models.Model):
+
+    worker_name = models.CharField(
+        max_length=100
+    )
+
+    worker_role = models.CharField(
+        max_length=100,
+        default="Packing Staff"
+    )
+
+    assigned_counter = models.CharField(
+        max_length=100
+    )
+
+    def __str__(self):
+
+        return self.worker_name
+
